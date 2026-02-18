@@ -1,0 +1,10 @@
+[project]
+name = "csmp-search-engine"
+version = "0.1.0"
+description = "Workspace root for multi-service CSMP search engine"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.129.0",
+]
+
