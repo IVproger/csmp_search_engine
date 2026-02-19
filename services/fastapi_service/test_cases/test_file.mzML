@@ -1,0 +1,439 @@
+<?xml version='1.0' encoding='utf-8'?>
+<indexedmzML xmlns="http://psi.hupo.org/ms/mzml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://psi.hupo.org/ms/mzml http://psidev.info/files/ms/mzML/xsd/mzML1.1.3_idx.xsd">
+  <mzML xmlns="http://psi.hupo.org/ms/mzml" version="1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://psi.hupo.org/ms/mzml http://psidev.info/files/ms/mzML/xsd/mzML1.1.1.xsd">
+    <cvList count="2">
+      <cv fullName="PSI-MS" URI="http://purl.obolibrary.org/obo/ms/psi-ms.obo" version="4.1.235" id="PSI-MS"/>
+      <cv fullName="UNIT-ONTOLOGY" URI="http://purl.obolibrary.org/obo/uo.obo" version="releases/2026-01-16" id="UO"/>
+    </cvList>
+    <run id="run_1">
+      <spectrumList count="10">
+        <spectrum index="0" defaultArrayLength="16" id="0">
+          <cvParam cvRef="PSI-MS" accession="MS:1000511" name="ms level" value="2"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000285" name="total ion current" value="168.22222900390625"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000866" name="molecular formula" value="C11H16BrNO2S"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1003055" name="adduct" value="[M+H-C4H11N]+"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000130" name="positive scan" value=""/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000127" name="centroid spectrum" value=""/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000580" name="MSn spectrum" value=""/>
+          <scanList count="1">
+            <cvParam cvRef="PSI-MS" accession="MS:1000795" name="no combination" value=""/>
+            <scan>
+            </scan>
+          </scanList>
+          <precursorList count="1">
+            <precursor>
+              <selectedIonList count="1">
+                <selectedIon>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000744" name="selected ion m/z" value="232.9266" unitCvRef="PSI-MS" unitAccession="MS:1000040" unitName="m/z"/>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000042" name="peak intensity" value="0.0" unitCvRef="PSI-MS" unitAccession="MS:1000131" unitName="number of detector counts"/>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000041" name="charge state" value="1"/>
+                </selectedIon>
+              </selectedIonList>
+              <activation>
+              </activation>
+            </precursor>
+          </precursorList>
+          <binaryDataArrayList count="2">
+            <binaryDataArray encodedLength="120">
+              <cvParam cvRef="PSI-MS" accession="MS:1000514" name="m/z array" value="" unitCvRef="PSI-MS" unitAccession="MS:1000040" unitName="m/z"/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000574" name="zlib compression" value=""/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000523" name="64-bit float" value=""/>
+              <binary>eJxjYGBg+Nrk6QCkGL6zeoPohK+M/iDa4UcTmG74yxgAohX+NoHpBSuNwsDq653AdENiEJh2eFgUBlUHpg+oTwbTD0wOQ+ST7iWC+Y/kUsHy/+xSHQDPmCFG</binary>
+            </binaryDataArray>
+            <binaryDataArray encodedLength="96">
+              <cvParam cvRef="PSI-MS" accession="MS:1000515" name="intensity array" value="" unitCvRef="PSI-MS" unitAccession="MS:1000131" unitName="number of detector counts"/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000574" name="zlib compression" value=""/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000521" name="32-bit float" value=""/>
+              <binary>eJy76sBq58F41taD0dfux/1f9o/58+z/PZhn9+2ApN3hHb5OIJpfcaUdA8MJJ3HHdXYCDqscVul72X9ZuMMBpA4AiCccVQ==</binary>
+            </binaryDataArray>
+          </binaryDataArrayList>
+        </spectrum>
+        <spectrum index="1" defaultArrayLength="52" id="1">
+          <cvParam cvRef="PSI-MS" accession="MS:1000511" name="ms level" value="2"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000285" name="total ion current" value="190.7847900390625"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000866" name="molecular formula" value="C17H22O6"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1003055" name="adduct" value="[M+H-C3H6O4]+"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000130" name="positive scan" value=""/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000127" name="centroid spectrum" value=""/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000580" name="MSn spectrum" value=""/>
+          <scanList count="1">
+            <cvParam cvRef="PSI-MS" accession="MS:1000795" name="no combination" value=""/>
+            <scan>
+            </scan>
+          </scanList>
+          <precursorList count="1">
+            <precursor>
+              <selectedIonList count="1">
+                <selectedIon>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000744" name="selected ion m/z" value="217.1223" unitCvRef="PSI-MS" unitAccession="MS:1000040" unitName="m/z"/>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000042" name="peak intensity" value="0.0" unitCvRef="PSI-MS" unitAccession="MS:1000131" unitName="number of detector counts"/>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000041" name="charge state" value="1"/>
+                </selectedIon>
+              </selectedIonList>
+              <activation>
+              </activation>
+            </precursor>
+          </precursorList>
+          <binaryDataArrayList count="2">
+            <binaryDataArray encodedLength="208">
+              <cvParam cvRef="PSI-MS" accession="MS:1000514" name="m/z array" value="" unitCvRef="PSI-MS" unitAccession="MS:1000040" unitName="m/z"/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000574" name="zlib compression" value=""/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000523" name="64-bit float" value=""/>
+              <binary>eJw1z00KwjAQhuEBwXMIPYIXCAhZC4qKpRqb/ug5vEgh13BRCLjyEIVcRNp5s3r4JpPJRERc990bWTyo9kjOnqifyWgveKWOtpwVGUtyRa7IN/rR3mfNtnDa53DACTcP7QsYMeGqZk7NHHLAlM+96vGNASMmr/utG95vuIcRi5Y6hpa9c+7Yr1d36Hv+uTj+PuTpSd/L/AF411M9</binary>
+            </binaryDataArray>
+            <binaryDataArray encodedLength="272">
+              <cvParam cvRef="PSI-MS" accession="MS:1000515" name="intensity array" value="" unitCvRef="PSI-MS" unitAccession="MS:1000131" unitName="number of detector counts"/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000574" name="zlib compression" value=""/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000521" name="32-bit float" value=""/>
+              <binary>eJzrYvxmm9mYaOcsz2X/rKHfjo1xiV1i4h07D0Zfu8zGh3an18fZq0fMsAepCbuw1X7dfh/7Tf7n7SsPvrbzWM9jf9Wh1U5cos/e8MA8+3flX+zPKjTYiVzgcfBgPGsb4RhuBxIDmmN7+Xyy/WN+PQeQOSA5EE6ZL2c/8byVPW/IC4e7CV12f4XXOao37rD7t93OAeSWLsYyu/v12faSCe8deu0t7CU39Tt8dZ3pMEnxtx1IHqSXgeGEE7/iSjueDe6OPvb89gCA0lZs</binary>
+            </binaryDataArray>
+          </binaryDataArrayList>
+        </spectrum>
+        <spectrum index="2" defaultArrayLength="47" id="2">
+          <cvParam cvRef="PSI-MS" accession="MS:1000511" name="ms level" value="2"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000285" name="total ion current" value="651.2195434570312"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000866" name="molecular formula" value="C21H23NO6"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1003055" name="adduct" value="[M]+"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000130" name="positive scan" value=""/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000127" name="centroid spectrum" value=""/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000580" name="MSn spectrum" value=""/>
+          <scanList count="1">
+            <cvParam cvRef="PSI-MS" accession="MS:1000795" name="no combination" value=""/>
+            <scan>
+            </scan>
+          </scanList>
+          <precursorList count="1">
+            <precursor>
+              <selectedIonList count="1">
+                <selectedIon>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000744" name="selected ion m/z" value="385.152538" unitCvRef="PSI-MS" unitAccession="MS:1000040" unitName="m/z"/>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000042" name="peak intensity" value="0.0" unitCvRef="PSI-MS" unitAccession="MS:1000131" unitName="number of detector counts"/>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000041" name="charge state" value="1"/>
+                </selectedIon>
+              </selectedIonList>
+              <activation>
+              </activation>
+            </precursor>
+          </precursorList>
+          <binaryDataArrayList count="2">
+            <binaryDataArray encodedLength="192">
+              <cvParam cvRef="PSI-MS" accession="MS:1000514" name="m/z array" value="" unitCvRef="PSI-MS" unitAccession="MS:1000040" unitName="m/z"/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000574" name="zlib compression" value=""/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000523" name="64-bit float" value=""/>
+              <binary>eJwtzs0NgkAQhuEtxRIsYS5ciIc1QogGwgqoiD+Af/FICZZAKVuKpRCddy9PZna+nTXmdwL5Y0J1WKhiqZfcr+hHqo+pE1wzv8GUuQxz+k51W94t1BGlVL/oK+Z36mxPH92BXE0O/ZH7hr0n8mf6F/Zfybfk8dNRY9fzLtob/0a5k0P7YM8TX+r8LRP57DJ4</binary>
+            </binaryDataArray>
+            <binaryDataArray encodedLength="196">
+              <cvParam cvRef="PSI-MS" accession="MS:1000515" name="intensity array" value="" unitCvRef="PSI-MS" unitAccession="MS:1000131" unitName="number of detector counts"/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000574" name="zlib compression" value=""/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000521" name="32-bit float" value=""/>
+              <binary>eJxb+13Y6alYv0O56iuHCyJMjvzSmo63p3I4+ioGAMWyHEC0suw2oFwTWA1I7PbUDkeQHsk56x0t5A8D5c0c3k8XdQTJgdT8kpABmrPSAWQWSD/IXJA8SM+0FbVget6dTWA1M76yOYFooDmOEL1zHIEYZA7YPKAZUPdlOXarf3dgYDjh1LiswKlbvdwRAHJNRb4=</binary>
+            </binaryDataArray>
+          </binaryDataArrayList>
+        </spectrum>
+        <spectrum index="3" defaultArrayLength="36" id="3">
+          <cvParam cvRef="PSI-MS" accession="MS:1000511" name="ms level" value="2"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000285" name="total ion current" value="1180.952392578125"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000866" name="molecular formula" value="C27H33ClO6"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1003055" name="adduct" value="[M]+"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000130" name="positive scan" value=""/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000127" name="centroid spectrum" value=""/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000580" name="MSn spectrum" value=""/>
+          <scanList count="1">
+            <cvParam cvRef="PSI-MS" accession="MS:1000795" name="no combination" value=""/>
+            <scan>
+            </scan>
+          </scanList>
+          <precursorList count="1">
+            <precursor>
+              <selectedIonList count="1">
+                <selectedIon>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000744" name="selected ion m/z" value="488.196566" unitCvRef="PSI-MS" unitAccession="MS:1000040" unitName="m/z"/>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000042" name="peak intensity" value="0.0" unitCvRef="PSI-MS" unitAccession="MS:1000131" unitName="number of detector counts"/>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000041" name="charge state" value="1"/>
+                </selectedIon>
+              </selectedIonList>
+              <activation>
+              </activation>
+            </precursor>
+          </precursorList>
+          <binaryDataArrayList count="2">
+            <binaryDataArray encodedLength="168">
+              <cvParam cvRef="PSI-MS" accession="MS:1000514" name="m/z array" value="" unitCvRef="PSI-MS" unitAccession="MS:1000040" unitName="m/z"/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000574" name="zlib compression" value=""/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000523" name="64-bit float" value=""/>
+              <binary>eJxjYAABPQcw1eACpb0gtEMAlA6GiodAaIZwqHgEhD4QBRWPgfJjofx4CJ2QAOUnQugFUDohCSqeDKEVUqDiqVB1aVB706H8DKi9mVD1WVDxbAj9IBeqPx9CbyiA0BMKoeJFEPpCMVS+BEIHlEFogQoovxJqXrUDAP3kJUA=</binary>
+            </binaryDataArray>
+            <binaryDataArray encodedLength="184">
+              <cvParam cvRef="PSI-MS" accession="MS:1000515" name="intensity array" value="" unitCvRef="PSI-MS" unitAccession="MS:1000131" unitName="number of detector counts"/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000574" name="zlib compression" value=""/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000521" name="32-bit float" value=""/>
+              <binary>eJyrux/uyMBwwmmxBpPTi8p9QLaH0/3vfx0263g7hoa2Oml2bXNqS5zheP/7TCcg39Fz0hPHF5V2jrvXdTsGiqgC1dY6gdgSbReBamodPCelOF42merUpLDD8c2ueY4yxw0df9QuBqrhBvLlnEDyQDOA5p8G6wfSDhJtgU4g++ruX3cEADGwQHs=</binary>
+            </binaryDataArray>
+          </binaryDataArrayList>
+        </spectrum>
+        <spectrum index="4" defaultArrayLength="5" id="4">
+          <cvParam cvRef="PSI-MS" accession="MS:1000511" name="ms level" value="2"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000285" name="total ion current" value="103.9589614868164"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000866" name="molecular formula" value="C27H32O14"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1003055" name="adduct" value="[M-H]-"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000130" name="positive scan" value=""/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000127" name="centroid spectrum" value=""/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000580" name="MSn spectrum" value=""/>
+          <scanList count="1">
+            <cvParam cvRef="PSI-MS" accession="MS:1000795" name="no combination" value=""/>
+            <scan>
+            </scan>
+          </scanList>
+          <precursorList count="1">
+            <precursor>
+              <selectedIonList count="1">
+                <selectedIon>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000744" name="selected ion m/z" value="579.1719" unitCvRef="PSI-MS" unitAccession="MS:1000040" unitName="m/z"/>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000042" name="peak intensity" value="0.0" unitCvRef="PSI-MS" unitAccession="MS:1000131" unitName="number of detector counts"/>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000041" name="charge state" value="-1"/>
+                </selectedIon>
+              </selectedIonList>
+              <activation>
+              </activation>
+            </precursor>
+          </precursorList>
+          <binaryDataArrayList count="2">
+            <binaryDataArray encodedLength="52">
+              <cvParam cvRef="PSI-MS" accession="MS:1000514" name="m/z array" value="" unitCvRef="PSI-MS" unitAccession="MS:1000040" unitName="m/z"/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000574" name="zlib compression" value=""/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000523" name="64-bit float" value=""/>
+              <binary>eJxjYGBQmKeQ5sDAwNDw80MBhC4oAtMqE4tBNMPljTUOANggC2E=</binary>
+            </binaryDataArray>
+            <binaryDataArray encodedLength="40">
+              <cvParam cvRef="PSI-MS" accession="MS:1000515" name="intensity array" value="" unitCvRef="PSI-MS" unitAccession="MS:1000131" unitName="number of detector counts"/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000574" name="zlib compression" value=""/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000521" name="32-bit float" value=""/>
+              <binary>eJzL0Fe0Z2A44ZQyX85+k7+//Rv9z/YAQJQHPg==</binary>
+            </binaryDataArray>
+          </binaryDataArrayList>
+        </spectrum>
+        <spectrum index="5" defaultArrayLength="11" id="5">
+          <cvParam cvRef="PSI-MS" accession="MS:1000511" name="ms level" value="2"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000285" name="total ion current" value="270.7987976074219"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000866" name="molecular formula" value="C24H38O4"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1003055" name="adduct" value="[M+H]+"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000130" name="positive scan" value=""/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000127" name="centroid spectrum" value=""/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000580" name="MSn spectrum" value=""/>
+          <scanList count="1">
+            <cvParam cvRef="PSI-MS" accession="MS:1000795" name="no combination" value=""/>
+            <scan>
+            </scan>
+          </scanList>
+          <precursorList count="1">
+            <precursor>
+              <selectedIonList count="1">
+                <selectedIon>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000744" name="selected ion m/z" value="391.2843" unitCvRef="PSI-MS" unitAccession="MS:1000040" unitName="m/z"/>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000042" name="peak intensity" value="0.0" unitCvRef="PSI-MS" unitAccession="MS:1000131" unitName="number of detector counts"/>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000041" name="charge state" value="1"/>
+                </selectedIon>
+              </selectedIonList>
+              <activation>
+              </activation>
+            </precursor>
+          </precursorList>
+          <binaryDataArrayList count="2">
+            <binaryDataArray encodedLength="92">
+              <cvParam cvRef="PSI-MS" accession="MS:1000514" name="m/z array" value="" unitCvRef="PSI-MS" unitAccession="MS:1000040" unitName="m/z"/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000574" name="zlib compression" value=""/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000523" name="64-bit float" value=""/>
+              <binary>eJxjYGBgsFVOcgBSB3YkQ2jrJWCawVolBUQrvF6SB6Ib5EOKQfSDe5/BdIJnSQmIXsAlUgqmTU3KwHRCSLkDAIIEFTk=</binary>
+            </binaryDataArray>
+            <binaryDataArray encodedLength="72">
+              <cvParam cvRef="PSI-MS" accession="MS:1000515" name="intensity array" value="" unitCvRef="PSI-MS" unitAccession="MS:1000131" unitName="number of detector counts"/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000574" name="zlib compression" value=""/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000521" name="32-bit float" value=""/>
+              <binary>eJz7LevryMDQYM+VscxhXv0h+5Ppd+0ZGE44cYkdc3irOsWh1eOx4/zS5U5VfWccAX6KEkE=</binary>
+            </binaryDataArray>
+          </binaryDataArrayList>
+        </spectrum>
+        <spectrum index="6" defaultArrayLength="8" id="6">
+          <cvParam cvRef="PSI-MS" accession="MS:1000511" name="ms level" value="2"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000285" name="total ion current" value="240.190185546875"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000866" name="molecular formula" value="C6H5NO"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1003055" name="adduct" value="[M+H]+"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000130" name="positive scan" value=""/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000127" name="centroid spectrum" value=""/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000580" name="MSn spectrum" value=""/>
+          <scanList count="1">
+            <cvParam cvRef="PSI-MS" accession="MS:1000795" name="no combination" value=""/>
+            <scan>
+            </scan>
+          </scanList>
+          <precursorList count="1">
+            <precursor>
+              <selectedIonList count="1">
+                <selectedIon>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000744" name="selected ion m/z" value="108.0444" unitCvRef="PSI-MS" unitAccession="MS:1000040" unitName="m/z"/>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000042" name="peak intensity" value="0.0" unitCvRef="PSI-MS" unitAccession="MS:1000131" unitName="number of detector counts"/>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000041" name="charge state" value="1"/>
+                </selectedIon>
+              </selectedIonList>
+              <activation>
+              </activation>
+            </precursor>
+          </precursorList>
+          <binaryDataArrayList count="2">
+            <binaryDataArray encodedLength="68">
+              <cvParam cvRef="PSI-MS" accession="MS:1000514" name="m/z array" value="" unitCvRef="PSI-MS" unitAccession="MS:1000040" unitName="m/z"/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000574" name="zlib compression" value=""/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000523" name="64-bit float" value=""/>
+              <binary>eJxjYGBI0G4KdmBgYGhIPASmHVZDaAZt5hAwP/JQOIg+cIspAkQr3G6MgvKjHQDLyQ9M</binary>
+            </binaryDataArray>
+            <binaryDataArray encodedLength="56">
+              <cvParam cvRef="PSI-MS" accession="MS:1000515" name="intensity array" value="" unitCvRef="PSI-MS" unitAccession="MS:1000131" unitName="number of detector counts"/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000574" name="zlib compression" value=""/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000521" name="32-bit float" value=""/>
+              <binary>eJxTuDPd6duBmXYh8SL2DAwnnJ791ndoiol1Um/cYffn4FwHAOtHDng=</binary>
+            </binaryDataArray>
+          </binaryDataArrayList>
+        </spectrum>
+        <spectrum index="7" defaultArrayLength="95" id="7">
+          <cvParam cvRef="PSI-MS" accession="MS:1000511" name="ms level" value="2"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000285" name="total ion current" value="230.83485412597656"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000866" name="molecular formula" value="C19H24O5"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1003055" name="adduct" value="[M+H-2H2O]+"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000130" name="positive scan" value=""/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000127" name="centroid spectrum" value=""/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000580" name="MSn spectrum" value=""/>
+          <scanList count="1">
+            <cvParam cvRef="PSI-MS" accession="MS:1000795" name="no combination" value=""/>
+            <scan>
+            </scan>
+          </scanList>
+          <precursorList count="1">
+            <precursor>
+              <selectedIonList count="1">
+                <selectedIon>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000744" name="selected ion m/z" value="297.1485" unitCvRef="PSI-MS" unitAccession="MS:1000040" unitName="m/z"/>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000042" name="peak intensity" value="0.0" unitCvRef="PSI-MS" unitAccession="MS:1000131" unitName="number of detector counts"/>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000041" name="charge state" value="1"/>
+                </selectedIon>
+              </selectedIonList>
+              <activation>
+              </activation>
+            </precursor>
+          </precursorList>
+          <binaryDataArrayList count="2">
+            <binaryDataArray encodedLength="528">
+              <cvParam cvRef="PSI-MS" accession="MS:1000514" name="m/z array" value="" unitCvRef="PSI-MS" unitAccession="MS:1000040" unitName="m/z"/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000574" name="zlib compression" value=""/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000523" name="64-bit float" value=""/>
+              <binary>eJwt0L1OwlAUB/Cr8Q3gAfgSjDoaN82FNCw6aFAwGk1p/YAKok1UwKVVQxz9GFxLcdLJB5AQms7G+AKVumBcNXEz/Z87/XLP+Z9zmjLGrN/WAmeM9X6uFgPlE2cp0EtklgPZiQT59OWy6OdEfQX1Uxda49Iq6nUnL/qFQCPhkMduQeTWcO8sC61TaT0wknTWxT7I3tMbuJeSIGtmoTHhQt6QNrEn5UCv7kKWkLZEHspTLeglXchfFJn2m9AK2fSe68CI9kH12wE0uj71h9EizQ+gEY4pNBeH8koG8nKR6o8mjNxfkOEO9ecfKL8/oFxXUbEv11fFXegNo9vIh+JQ/nbEu7ODfTkHWuUB9OY6u9hXHd3DvqG9J+6WkJvsQ+/OL1E9riGnKZA/nWtiDnqaT/WvWAVvloE9rlToP6kV6ttVkYeyOXqAPb0YjKRV6HXtGvIjDsn9Gn3/J2Tt50PUP97I16MjzM3o0Grc0JvZ5JipY64p/Dsn89dkmzRmb6Al3+r0n9o6/wf28b0V</binary>
+            </binaryDataArray>
+            <binaryDataArray encodedLength="488">
+              <cvParam cvRef="PSI-MS" accession="MS:1000515" name="intensity array" value="" unitCvRef="PSI-MS" unitAccession="MS:1000131" unitName="number of detector counts"/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000574" name="zlib compression" value=""/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000521" name="32-bit float" value=""/>
+              <binary>eJyTXjHBXr1xh51pwEL7LsZvtkwejfb/Hsyzm/Xe3n6T/3n7s9/v22c2JtqZ5zPZh3RssWdjVLG72P7IXj5xs53FQSe7ynxtoL4yO3GJPvvKg9l2Hoxn7VLmywHVLbH7dmCmXeHCZ3a78kPs5S2EHY7Lx9h/8a+wj3AMt7P+zwI096GduKMe0JxDdmcVGuyWzT9uD2JzKCx1AKnZ9z/MXuQCjwNIrZBZt8PUeFv7AMVLdgn8MmD7QXZHvBezl0zot3/h/NEBZJ75jEX2z+cX2LNrtTi8fH7R4fb7DHsvhXVAP1rYOctz2V91aLXL0FcE281qwuwAch+HAqvDJ/bpDiB/71C/bO+Tsd7+Z/Nsh89qGY4/7v8Csqsdjl6/Zc/AcMLpvH2ivQejr91jfj0HziJWx3cLptiBzAS5V9xxnZ3+wr12i/hd7dluNNvn7Fe251dcCRYH+euNfrH9JMXfdnfNtRwe8+fZAwD3Mpli</binary>
+            </binaryDataArray>
+          </binaryDataArrayList>
+        </spectrum>
+        <spectrum index="8" defaultArrayLength="7" id="8">
+          <cvParam cvRef="PSI-MS" accession="MS:1000511" name="ms level" value="2"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000285" name="total ion current" value="123.8608627319336"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000866" name="molecular formula" value="C16H17NO2"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1003055" name="adduct" value="[M+H]+"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000130" name="positive scan" value=""/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000127" name="centroid spectrum" value=""/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000580" name="MSn spectrum" value=""/>
+          <scanList count="1">
+            <cvParam cvRef="PSI-MS" accession="MS:1000795" name="no combination" value=""/>
+            <scan>
+            </scan>
+          </scanList>
+          <precursorList count="1">
+            <precursor>
+              <selectedIonList count="1">
+                <selectedIon>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000744" name="selected ion m/z" value="256.1332" unitCvRef="PSI-MS" unitAccession="MS:1000040" unitName="m/z"/>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000042" name="peak intensity" value="0.0" unitCvRef="PSI-MS" unitAccession="MS:1000131" unitName="number of detector counts"/>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000041" name="charge state" value="1"/>
+                </selectedIon>
+              </selectedIonList>
+              <activation>
+              </activation>
+            </precursor>
+          </precursorList>
+          <binaryDataArrayList count="2">
+            <binaryDataArray encodedLength="68">
+              <cvParam cvRef="PSI-MS" accession="MS:1000514" name="m/z array" value="" unitCvRef="PSI-MS" unitAccession="MS:1000040" unitName="m/z"/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000574" name="zlib compression" value=""/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000523" name="64-bit float" value=""/>
+              <binary>eJxjYGBQKD4c5sDAwLCg3CUWRDuUHwXTDOcc40B0w1TmRBCtMJUpCUy/dkpxAABkrQyu</binary>
+            </binaryDataArray>
+            <binaryDataArray encodedLength="52">
+              <cvParam cvRef="PSI-MS" accession="MS:1000515" name="intensity array" value="" unitCvRef="PSI-MS" unitAccession="MS:1000131" unitName="number of detector counts"/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000574" name="zlib compression" value=""/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000521" name="32-bit float" value=""/>
+              <binary>eJx7lJ3r8G7BFLtP7N/tWdKbHBkYTjipN1rYxazYaQ8AvBkL3A==</binary>
+            </binaryDataArray>
+          </binaryDataArrayList>
+        </spectrum>
+        <spectrum index="9" defaultArrayLength="18" id="9">
+          <cvParam cvRef="PSI-MS" accession="MS:1000511" name="ms level" value="2"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000285" name="total ion current" value="146.19219970703125"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000866" name="molecular formula" value="C42H66O15"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1003055" name="adduct" value="[M+H-C13H22O12]+"/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000130" name="positive scan" value=""/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000127" name="centroid spectrum" value=""/>
+          <cvParam cvRef="PSI-MS" accession="MS:1000580" name="MSn spectrum" value=""/>
+          <scanList count="1">
+            <cvParam cvRef="PSI-MS" accession="MS:1000795" name="no combination" value=""/>
+            <scan>
+            </scan>
+          </scanList>
+          <precursorList count="1">
+            <precursor>
+              <selectedIonList count="1">
+                <selectedIon>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000744" name="selected ion m/z" value="441.3363" unitCvRef="PSI-MS" unitAccession="MS:1000040" unitName="m/z"/>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000042" name="peak intensity" value="0.0" unitCvRef="PSI-MS" unitAccession="MS:1000131" unitName="number of detector counts"/>
+                  <cvParam cvRef="PSI-MS" accession="MS:1000041" name="charge state" value="1"/>
+                </selectedIon>
+              </selectedIonList>
+              <activation>
+              </activation>
+            </precursor>
+          </precursorList>
+          <binaryDataArrayList count="2">
+            <binaryDataArray encodedLength="136">
+              <cvParam cvRef="PSI-MS" accession="MS:1000514" name="m/z array" value="" unitCvRef="PSI-MS" unitAccession="MS:1000040" unitName="m/z"/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000574" name="zlib compression" value=""/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000523" name="64-bit float" value=""/>
+              <binary>eJxjYGBYMCklzYGBgeFB1tM8EL1g0jMwzfA1qABEN3wRKgTRDszKENr0M5hmUJhaDqZ1l4LpBq+tFWD94UchdPfVCoj60ioQneDUCqYVDFurwfbFTwXTDS8XQvhZS6sdAKZQJqo=</binary>
+            </binaryDataArray>
+            <binaryDataArray encodedLength="108">
+              <cvParam cvRef="PSI-MS" accession="MS:1000515" name="intensity array" value="" unitCvRef="PSI-MS" unitAccession="MS:1000131" unitName="number of detector counts"/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000574" name="zlib compression" value=""/>
+              <cvParam cvRef="PSI-MS" accession="MS:1000521" name="32-bit float" value=""/>
+              <binary>eJzrYvxmq95oYXdWgcE+Z7+y/Z98W4cIx+tAfoPd6fVx9h6MvnYpJ/bZyydutuNXXGnHt+yEw57tV+0r87XtGRhOOIk76tkxnn3hCAAAcxvN</binary>
+            </binaryDataArray>
+          </binaryDataArrayList>
+        </spectrum>
+      </spectrumList>
+    </run>
+  </mzML>
+  <indexList count="1">
+    <index name="spectrum">
+      <offset idRef="0">790</offset>
+      <offset idRef="1">3693</offset>
+      <offset idRef="2">6856</offset>
+      <offset idRef="3">9921</offset>
+      <offset idRef="4">12951</offset>
+      <offset idRef="5">15718</offset>
+      <offset idRef="6">18556</offset>
+      <offset idRef="7">21350</offset>
+      <offset idRef="8">25048</offset>
+      <offset idRef="9">27842</offset>
+    </index>
+  </indexList>
+  <indexListOffset>30808</indexListOffset>
+  <fileChecksum>c69fbd47a4e83fe51015b8a7cc637ebc13f58506</fileChecksum>
+</indexedmzML>

@@ -1,0 +1,11 @@
+FROM python:3.11-slim
+
+WORKDIR /service
+
+COPY requirements-test.txt .
+RUN pip install --no-cache-dir -r requirements-test.txt
+
+COPY test_cases ./test_cases
+COPY tests ./tests
+
+CMD ["python", "tests/run_api_tests.py"]
