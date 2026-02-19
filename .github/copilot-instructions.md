@@ -148,4 +148,8 @@ spectrum №2
 - REST → FastAPI API
 - SQL + vector search → Postgres
 
+
+## System Limitations & Future Improvements
+1. We can work only with spectrum data with has the precursor_m/z field, otherwise we cannot perform candidate search. In the future, we can consider implementing a fallback solution for spectra without precursor_m/z, such as using a separate model that can generate candidates based on peak patterns alone, or by leveraging any available metadata to make educated guesses about potential precursor m/z values.
+2. For Molecular Encoder model, we need to reran the ONNX compilation script each time when we change the batch size. Currently we need to pad the batch to the fixed size, which is not optimal for inference efficiency. In the future, we need to rewrate the ESA module inside the Molecular Encoder to support dynamic batch sizes.
 ---

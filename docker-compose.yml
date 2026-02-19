@@ -15,8 +15,40 @@ services:
       timeout: 5s
       retries: 10
       start_period: 10s
+    environment:
+      TRITON_GRPC_URL: triton_service:8001
+      TRITON_MODEL_NAME: spectrum_encoder
+      SPECTRUM_MAX_PEAKS: 1024
+      SPECTRUM_INFER_CHUNK_SIZE: 64
+    depends_on:
+      triton_service:
+        condition: service_healthy
     networks:
       - csmp-network
+
+  triton_service:
+    build:
+      context: ./services/triton_service
+      dockerfile: Dockerfile
+    container_name: triton-inference-service
+    ports:
+      - "8001:8001"
+      - "8002:8002"
+      - "8003:8003"
+    volumes:
+      - ./models:/models:ro
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8002/v2/health/ready', timeout=2)"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+    networks:
+      - csmp-network
+
+networks:
+  csmp-network:
+    driver: bridge
 
   # api_tests:
   #   build:
@@ -31,37 +63,3 @@ services:
   #       condition: service_healthy
   #   networks:
   #     - csmp-network
-
-  # streamlit_service:
-  #   build:
-  #     context: ./services/streamlit_service
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "8501:8501"
-  #   networks:
-  #     - csmp-network
-
-  # triton_service:
-  #   build:
-  #     context: ./services/triton_service
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "8001:8001"
-  #   networks:
-  #     - csmp-network
-
-  # postgres_service:
-  #   image: pgvector/pgvector:pg16
-  #   ports:
-  #     - "5432:5432"
-  #   volumes:
-  #     - pg_data:/var/lib/postgresql/data
-  #   networks:
-  #     - csmp-network
-
-networks:
-  csmp-network:
-    driver: bridge
-
-# volumes:
-#   pg_data:

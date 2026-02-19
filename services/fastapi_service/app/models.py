@@ -22,6 +22,7 @@ class MoleculeCandidate(BaseModel):
 class SpectrumAnnotationResult(BaseModel):
     spectrum_id: str
     precursor_mz: float | None = Field(default=None)
+    embedding: list[float] | None = Field(default=None)
     candidates: list[MoleculeCandidate] | None = Field(default=None)
     message: str | None = Field(default=None)
 

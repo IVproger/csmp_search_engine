@@ -4,6 +4,10 @@ from fastapi import FastAPI, File, HTTPException, UploadFile, status
 from app.file_formats import SUPPORTED_EXTENSIONS, SUPPORTED_FORMATS_MESSAGE
 from app.models import AnnotateSpectrumResponse, SpectrumAnnotationResult
 from app.spectrum_parser import SpectrumParserError, parse_uploaded_spectra
+from app.spectrum_encoder_client import (
+    SpectrumInferenceError,
+    get_spectrum_encoder_client,
+)
 
 def _configure_logger() -> logging.Logger:
     app_logger = logging.getLogger(__name__)
@@ -52,12 +56,14 @@ async def annotate_spectrum(file: UploadFile = File(...)) -> AnnotateSpectrumRes
     # Parse the uploaded file and extract spectra
     try:
         parsed_spectra = await parse_uploaded_spectra(file)
+    
     except SpectrumParserError as error:
         logger.warning("Spectrum parsing error for file %s: %s", file_name, error)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(error),
         ) from error
+    
     except Exception as error:
         logger.exception("Unexpected parser failure for file %s", file_name)
         raise HTTPException(
@@ -70,6 +76,30 @@ async def annotate_spectrum(file: UploadFile = File(...)) -> AnnotateSpectrumRes
 
     # Prepare response with parsed spectra and placeholder messages for candidates
     results: list[SpectrumAnnotationResult] = []
+    valid_spectra = [spectrum for spectrum in parsed_spectra if spectrum.precursor_mz is not None]
+    embeddings_by_spectrum_id: dict[str, list[float]] = {}
+
+    if valid_spectra:
+        try:
+            encoder_client = get_spectrum_encoder_client()
+            embeddings = encoder_client.encode(valid_spectra)
+
+            if embeddings.shape[0] != len(valid_spectra):
+                raise SpectrumInferenceError(
+                    "Encoder output batch size does not match parsed spectra batch size."
+                )
+
+            for index, spectrum in enumerate(valid_spectra):
+                embeddings_by_spectrum_id[spectrum.spectrum_id] = embeddings[index].astype(float).tolist()
+
+            logger.info(
+                "Generated embeddings for %d spectra using Triton model",
+                len(valid_spectra),
+            )
+        except SpectrumInferenceError as error:
+            logger.warning("Spectrum encoder inference failed: %s", error)
+        except Exception as error:
+            logger.exception("Unexpected spectrum encoder failure")
     
     # If precursor_mz is missing, include parsing message and skip candidate generation for that spectrum.
     for spectrum in parsed_spectra:
@@ -91,9 +121,17 @@ async def annotate_spectrum(file: UploadFile = File(...)) -> AnnotateSpectrumRes
             SpectrumAnnotationResult(
                 spectrum_id=spectrum.spectrum_id,
                 precursor_mz=spectrum.precursor_mz,
+                embedding=embeddings_by_spectrum_id.get(spectrum.spectrum_id),
                 candidates=None,
                 message=(
-                    "Spectrum parsed successfully."
+                    (
+                        "Spectrum parsed and encoded successfully."
+                    )
+                    if spectrum.spectrum_id in embeddings_by_spectrum_id
+                    else (
+                        "Spectrum parsed successfully, but encoder inference is unavailable. "
+                        "Candidate search is unavailable."
+                    )
                 ),
             )
         )
@@ -101,13 +139,20 @@ async def annotate_spectrum(file: UploadFile = File(...)) -> AnnotateSpectrumRes
     logger.info("Prepared %d spectrum results for response", len(results))
 
     # TODO: send parsed_spectra to inference + DB search pipeline.
+
+
+
+
+
+
+
     return AnnotateSpectrumResponse(
         status="accepted",
         file_name=file_name,
         file_type=SUPPORTED_EXTENSIONS[extension],
         message=(
             f"Successfully parsed {len(parsed_spectra)} spectra. "
-            "Inference pipeline is not implemented yet."
+            "Spectrum encoder inference attempted; DB search pipeline is not implemented yet."
         ),
         results=results,
     )

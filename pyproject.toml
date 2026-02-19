@@ -8,5 +8,6 @@ dependencies = [
     "fastapi>=0.129.0",
     "matchms>=0.31.0",
     "pymzml>=2.6.0",
+    "tritonclient[grpc]>=2.65.0",
 ]
 
