@@ -6,7 +6,9 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.129.0",
+    "jupyter>=1.1.1",
     "matchms>=0.31.0",
+    "psycopg[binary]>=3.3.3",
     "pymzml>=2.6.0",
     "tritonclient[grpc]>=2.65.0",
 ]
