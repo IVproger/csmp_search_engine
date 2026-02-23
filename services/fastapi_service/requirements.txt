@@ -7,3 +7,4 @@ matchms>=0.28.2
 requests>=2.32.3
 numpy>=1.26.4
 tritonclient[grpc]>=2.48.0
+psycopg[binary]>=3.2.1

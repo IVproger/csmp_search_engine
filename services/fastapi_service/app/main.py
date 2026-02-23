@@ -1,8 +1,9 @@
 from pathlib import Path
 import logging
 from fastapi import FastAPI, File, HTTPException, UploadFile, status
+from app.db_search_client import DatabaseSearchError, get_db_search_client
 from app.file_formats import SUPPORTED_EXTENSIONS, SUPPORTED_FORMATS_MESSAGE
-from app.models import AnnotateSpectrumResponse, SpectrumAnnotationResult
+from app.models import AnnotateSpectrumResponse, MoleculeCandidate, SpectrumAnnotationResult
 from app.spectrum_parser import SpectrumParserError, parse_uploaded_spectra
 from app.spectrum_encoder_client import (
     SpectrumInferenceError,
@@ -74,10 +75,13 @@ async def annotate_spectrum(file: UploadFile = File(...)) -> AnnotateSpectrumRes
             ),
         ) from error
 
+    # TODO: send parsed_spectra to inference + DB search pipeline.
     # Prepare response with parsed spectra and placeholder messages for candidates
     results: list[SpectrumAnnotationResult] = []
     valid_spectra = [spectrum for spectrum in parsed_spectra if spectrum.precursor_mz is not None]
     embeddings_by_spectrum_id: dict[str, list[float]] = {}
+    candidates_by_spectrum_id: dict[str, list[MoleculeCandidate]] = {}
+    db_errors_by_spectrum_id: dict[str, str] = {}
 
     if valid_spectra:
         try:
@@ -96,8 +100,33 @@ async def annotate_spectrum(file: UploadFile = File(...)) -> AnnotateSpectrumRes
                 "Generated embeddings for %d spectra using Triton model",
                 len(valid_spectra),
             )
+
+            db_search_client = get_db_search_client()
+            for spectrum in valid_spectra:
+                spectrum_embedding = embeddings_by_spectrum_id.get(spectrum.spectrum_id)
+                if spectrum_embedding is None or spectrum.precursor_mz is None:
+                    logger.warning(
+                        "Missing embedding or precursor_mz for spectrum %s. Skipping DB search.",
+                        spectrum.spectrum_id,
+                    )
+                    continue
+
+                try:
+                    candidates_by_spectrum_id[spectrum.spectrum_id] = db_search_client.search_candidates(
+                        precursor_mz=spectrum.precursor_mz,
+                        embedding=spectrum_embedding,
+                    )
+                except DatabaseSearchError as error:
+                    logger.warning(
+                        "Molecular DB search failed for spectrum %s: %s",
+                        spectrum.spectrum_id,
+                        error,
+                    )
+                    db_errors_by_spectrum_id[spectrum.spectrum_id] = str(error)
         except SpectrumInferenceError as error:
             logger.warning("Spectrum encoder inference failed: %s", error)
+        except DatabaseSearchError as error:
+            logger.warning("Molecular DB client initialization failed: %s", error)
         except Exception as error:
             logger.exception("Unexpected spectrum encoder failure")
     
@@ -121,13 +150,27 @@ async def annotate_spectrum(file: UploadFile = File(...)) -> AnnotateSpectrumRes
             SpectrumAnnotationResult(
                 spectrum_id=spectrum.spectrum_id,
                 precursor_mz=spectrum.precursor_mz,
-                embedding=embeddings_by_spectrum_id.get(spectrum.spectrum_id),
-                candidates=None,
+                candidates=candidates_by_spectrum_id.get(spectrum.spectrum_id),
                 message=(
-                    (
-                        "Spectrum parsed and encoded successfully."
+                    "Spectrum parsed and encoded successfully. No molecular candidates found in the configured mass window."
+                    if (
+                        spectrum.spectrum_id in embeddings_by_spectrum_id
+                        and spectrum.spectrum_id not in db_errors_by_spectrum_id
+                        and not candidates_by_spectrum_id.get(spectrum.spectrum_id)
                     )
-                    if spectrum.spectrum_id in embeddings_by_spectrum_id
+                    else (
+                        "Spectrum parsed, encoded, and searched successfully."
+                    )
+                    if (
+                        spectrum.spectrum_id in embeddings_by_spectrum_id
+                        and spectrum.spectrum_id not in db_errors_by_spectrum_id
+                        and bool(candidates_by_spectrum_id.get(spectrum.spectrum_id))
+                    )
+                    else (
+                        "Spectrum parsed successfully, but molecular DB search is unavailable. "
+                        "Candidate search is unavailable."
+                    )
+                    if spectrum.spectrum_id in db_errors_by_spectrum_id
                     else (
                         "Spectrum parsed successfully, but encoder inference is unavailable. "
                         "Candidate search is unavailable."
@@ -138,21 +181,13 @@ async def annotate_spectrum(file: UploadFile = File(...)) -> AnnotateSpectrumRes
 
     logger.info("Prepared %d spectrum results for response", len(results))
 
-    # TODO: send parsed_spectra to inference + DB search pipeline.
-
-
-
-
-
-
-
     return AnnotateSpectrumResponse(
         status="accepted",
         file_name=file_name,
         file_type=SUPPORTED_EXTENSIONS[extension],
         message=(
             f"Successfully parsed {len(parsed_spectra)} spectra. "
-            "Spectrum encoder inference attempted; DB search pipeline is not implemented yet."
+            "Spectrum encoder inference and molecular DB candidate search were attempted."
         ),
         results=results,
     )

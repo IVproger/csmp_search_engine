@@ -17,12 +17,11 @@ class ParsedSpectrum(BaseModel):
 class MoleculeCandidate(BaseModel):
     smiles: str
     mass: float
-    score: float = Field(..., ge=0.0, le=1.0)
+    similarity_score: float = Field(..., ge=0.0, le=100.0)
 
 class SpectrumAnnotationResult(BaseModel):
     spectrum_id: str
     precursor_mz: float | None = Field(default=None)
-    embedding: list[float] | None = Field(default=None)
     candidates: list[MoleculeCandidate] | None = Field(default=None)
     message: str | None = Field(default=None)
 
