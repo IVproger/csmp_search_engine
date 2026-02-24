@@ -48,6 +48,20 @@ def _inject_styles() -> None:
                 font-size: 1rem;
                 line-height: 1.5;
             }
+
+            .spectrum-summary {
+                border-left: 4px solid #1f77b4;
+                padding: 0.45rem 0.8rem;
+                margin: 0.35rem 0 0.75rem 0;
+                background: rgba(31, 119, 180, 0.08);
+            }
+
+            .candidate-head {
+                border-left: 3px solid #2ca02c;
+                padding-left: 0.6rem;
+                margin: 0.65rem 0 0.45rem 0;
+                font-weight: 600;
+            }
         </style>
         """,
         unsafe_allow_html=True,
@@ -256,6 +270,18 @@ def render_spectrum_results(response_json: dict[str, Any]) -> None:
     st.subheader("Search results")
     st.caption(response_json.get("message", ""))
 
+    response_payload = json.dumps(response_json, indent=2, ensure_ascii=False).encode("utf-8")
+    download_name = f"annotation_{response_json.get('file_name', 'results')}.json"
+    st.download_button(
+        label="Download full annotation JSON",
+        data=response_payload,
+        file_name=download_name,
+        mime="application/json",
+        use_container_width=True,
+    )
+    st.caption("Candidate display settings")
+    show_candidate_details = st.toggle("Show candidate details", value=True)
+
     for spectrum_index, spectrum in enumerate(results):
         spectrum_id = spectrum.get("spectrum_id", "unknown")
         precursor_mz = spectrum.get("precursor_mz")
@@ -263,40 +289,64 @@ def render_spectrum_results(response_json: dict[str, Any]) -> None:
         candidates = spectrum.get("candidates") or []
 
         st.markdown(f"### Spectrum {spectrum_id}")
-        if precursor_mz is not None:
-            st.markdown(f"**Precursor m/z:** {precursor_mz}")
+        st.markdown(
+            f"""
+            <div class="spectrum-summary">
+                <b>Precursor m/z:</b> {precursor_mz if precursor_mz is not None else 'N/A'} &nbsp;&nbsp;|&nbsp;&nbsp;
+                <b>Candidates:</b> {len(candidates)}
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
         if spectrum_message:
             st.markdown(f"<span class='small-note'>{spectrum_message}</span>", unsafe_allow_html=True)
 
         if not candidates:
             st.info("No candidates available for this spectrum.")
         else:
-            for index, candidate in enumerate(candidates):
-                st.markdown(f"#### Candidate {index + 1}")
-                image_col, info_col = st.columns([1.6, 1.4])
+            summary_rows = [
+                {
+                    "#": index + 1,
+                    "Mass": candidate.get("mass", "N/A"),
+                    "Score": candidate.get("similarity_score", "N/A"),
+                    "SMILES": str(candidate.get("smiles", "")),
+                }
+                for index, candidate in enumerate(candidates)
+            ]
+            st.dataframe(summary_rows, use_container_width=True, hide_index=True)
 
-                candidate_smiles = str(candidate.get("smiles", ""))
-                with image_col:
-                    structure_image = smiles_to_image(candidate_smiles)
-                    if structure_image is not None:
-                        st.image(structure_image, use_container_width=True)
-                    else:
-                        st.warning("Failed to render structure from SMILES.")
-
-                with info_col:
+            if show_candidate_details:
+                for index, candidate in enumerate(candidates):
                     st.markdown(
-                        f"""
-                        <div class="molecule-meta">
-                            <b>SMILES</b><br>{candidate_smiles}<br><br>
-                            <b>Monoisotopic mass</b><br>{candidate.get('mass', 'N/A')}<br><br>
-                            <b>Similarity score</b><br>{candidate.get('similarity_score', 'N/A')}
-                        </div>
-                        """,
+                        f"<div class='candidate-head'>Candidate {index + 1}</div>",
                         unsafe_allow_html=True,
                     )
+                    image_col, info_col = st.columns([1.6, 1.4])
 
-                if index < len(candidates) - 1:
-                    st.divider()
+                    candidate_smiles = str(candidate.get("smiles", ""))
+                    with image_col:
+                        structure_image = smiles_to_image(candidate_smiles)
+                        if structure_image is not None:
+                            st.image(structure_image, use_container_width=True)
+                        else:
+                            st.warning("Failed to render structure from SMILES.")
+
+                    with info_col:
+                        st.markdown(
+                            f"""
+                            <div class="molecule-meta">
+                                <b>Monoisotopic mass</b><br>{candidate.get('mass', 'N/A')}<br><br>
+                                <b>Similarity score</b><br>{candidate.get('similarity_score', 'N/A')}
+                            </div>
+                            """,
+                            unsafe_allow_html=True,
+                        )
+                        st.markdown("<div style='height: 0.65rem;'></div>", unsafe_allow_html=True)
+                        st.markdown("**SMILES:**")
+                        st.code(candidate_smiles)
+
+                    if index < len(candidates) - 1:
+                        st.divider()
 
         spectrum_payload = {
             "status": response_json.get("status"),
@@ -312,16 +362,6 @@ def render_spectrum_results(response_json: dict[str, Any]) -> None:
             key=f"download_spectrum_{spectrum_index}_{spectrum_id}",
             use_container_width=True,
         )
-
-    response_payload = json.dumps(response_json, indent=2, ensure_ascii=False).encode("utf-8")
-    download_name = f"annotation_{response_json.get('file_name', 'results')}.json"
-    st.download_button(
-        label="Download annotation response",
-        data=response_payload,
-        file_name=download_name,
-        mime="application/json",
-        use_container_width=True,
-    )
 
 
 def main() -> None:
