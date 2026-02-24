@@ -1,6 +1,22 @@
 name: csmp-search-engine
 
 services:
+  streamlit_service:
+    build:
+      context: ./services/streamlit_service
+      dockerfile: Dockerfile
+    container_name: streamlit-web-ui
+    ports:
+      - "8501:8501"
+    restart: unless-stopped
+    environment:
+      FASTAPI_BASE_URL: http://fastapi_service:8000
+    depends_on:
+      fastapi_service:
+        condition: service_healthy
+    networks:
+      - csmp-network
+
   postgres_service:
     build:
       context: ./services/postgres_service

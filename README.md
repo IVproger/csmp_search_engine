@@ -9,6 +9,10 @@ Microservice workspace for spectrum-to-molecule annotation.
   - `app/models.py` — Pydantic data models
   - `Dockerfile` — service container image
   - `requirements.txt` — service Python dependencies
+- `services/streamlit_service/` — Streamlit web UI service
+  - `app.py` — upload/preview/search UI and results rendering
+  - `Dockerfile` — service container image
+  - `requirements.txt` — service Python dependencies
 - `services/postgres_service/` — PostgreSQL + pgvector database service
   - `initdb/` — one-time initialization scripts (schema, seed load, indexes)
   - `scripts/reload_from_csv.sql` — manual CSV reload/upsert script
@@ -21,6 +25,7 @@ docker compose up --build
 
 This starts:
 
+- `streamlit_service` (`8501`)
 - `postgres_service` (`5432`) with persistent DB storage in `data/postgres_molecular_search_db/postgres_data`
 - `fastapi_service` (`8000`)
 - `triton_service` (`8001/8002/8003`)
