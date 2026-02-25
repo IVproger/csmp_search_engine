@@ -9,4 +9,4 @@ class SpectrumInferenceConfig:
     model_version: str = os.getenv("TRITON_MODEL_VERSION", "")
     max_peaks: int = int(os.getenv("SPECTRUM_MAX_PEAKS", "1024"))
     infer_timeout_seconds: float = float(os.getenv("TRITON_INFER_TIMEOUT_SECONDS", "30"))
-    infer_chunk_size: int = int(os.getenv("SPECTRUM_INFER_CHUNK_SIZE", "64"))
+    infer_chunk_size: int = int(os.getenv("SPECTRUM_INFER_CHUNK_SIZE", "32"))

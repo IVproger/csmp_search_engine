@@ -59,7 +59,7 @@ services:
       TRITON_GRPC_URL: triton_service:8001
       TRITON_MODEL_NAME: spectrum_encoder
       SPECTRUM_MAX_PEAKS: 1024
-      SPECTRUM_INFER_CHUNK_SIZE: 64
+      SPECTRUM_INFER_CHUNK_SIZE: 32
     depends_on:
       postgres_service:
         condition: service_healthy
