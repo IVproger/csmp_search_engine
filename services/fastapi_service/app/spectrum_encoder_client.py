@@ -33,7 +33,13 @@ class SpectrumEncoderClient:
             mzs, intensities, num_peaks = self._build_inputs(chunk)
             embeddings_chunks.append(self._infer_chunk(mzs, intensities, num_peaks))
 
-        return np.concatenate(embeddings_chunks, axis=0)
+        # L2-normalize embeddings
+        embeddings = np.concatenate(embeddings_chunks, axis=0)
+        norms = np.linalg.norm(embeddings, axis=1, keepdims=True) # Avoid division by zero
+        norms[norms == 0] = 1.0
+        embeddings = embeddings / norms
+        
+        return embeddings
 
     def _resolve_output_name(self) -> str:
         try:

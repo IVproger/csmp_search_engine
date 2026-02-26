@@ -9,6 +9,7 @@ class Peak(BaseModel):
 class ParsedSpectrum(BaseModel):
     spectrum_id: str = Field(..., description="Unique spectrum identifier within source file")
     precursor_mz: float | None = Field(default=None, description="Precursor m/z")
+    charge: int | None = Field(default=None, description="Precursor charge")
     adduct: str | None = Field(default=None, description="Adduct string when available")
     formula: str | None = Field(default=None, description="Molecular formula when available")
     peaks: list[Peak] = Field(default_factory=list, description="Spectrum peaks")

@@ -4,7 +4,7 @@ import math
 import os
 from dataclasses import dataclass
 from functools import lru_cache
-
+import pandas as pd
 import psycopg
 
 from app.models import MoleculeCandidate
@@ -12,7 +12,6 @@ from app.models import MoleculeCandidate
 
 class DatabaseSearchError(RuntimeError):
     pass
-
 
 @dataclass(frozen=True)
 class DatabaseSearchConfig:
@@ -22,10 +21,11 @@ class DatabaseSearchConfig:
     user: str = os.getenv("POSTGRES_USER", "csmp_user")
     password: str = os.getenv("POSTGRES_PASSWORD", "csmp_password")
     table_name: str = os.getenv("POSTGRES_MOLECULAR_TABLE", "molecular_search")
-    ppm_tolerance: float = float(os.getenv("SEARCH_PPM_TOLERANCE", "1000"))
+    ppm_tolerance: float = float(os.getenv("SEARCH_PPM_TOLERANCE", "50"))
     top_k: int = int(os.getenv("SEARCH_TOP_K", "10"))
     connect_timeout_seconds: int = int(os.getenv("POSTGRES_CONNECT_TIMEOUT", "5"))
 
+ADDUCT_MZ_LOOKUP_TABLE = pd.read_csv("app/adducts_lookup_table.csv").set_index("adduct")["mz"].to_dict()
 
 class DbSearchClient:
     def __init__(self, config: DatabaseSearchConfig):
@@ -35,6 +35,7 @@ class DbSearchClient:
         self,
         *,
         precursor_mz: float,
+        adduct: str | None = None,
         embedding: list[float],
         ppm_tolerance: float | None = None,
         top_k: int | None = None,
@@ -50,11 +51,13 @@ class DbSearchClient:
 
         effective_ppm = ppm_tolerance if ppm_tolerance is not None else self._config.ppm_tolerance
         effective_top_k = top_k if top_k is not None else self._config.top_k
-
-        lower_mass = precursor_mz * (1 - effective_ppm * 1e-6)
-        upper_mass = precursor_mz * (1 + effective_ppm * 1e-6)
+        
+        neutral_mass = precursor_mz - ADDUCT_MZ_LOOKUP_TABLE.get(adduct, 1.007825)
+        delta = neutral_mass * (effective_ppm / 1e6)
+        lower_mass = neutral_mass - delta
+        upper_mass = neutral_mass + delta
+        
         vector_literal = _to_pgvector_literal(embedding)
-
         query = f"""
             WITH mass_filtered AS (
                 SELECT
@@ -62,8 +65,8 @@ class DbSearchClient:
                     monoisotopic_mass,
                     mol_embedding
                 FROM {self._config.table_name}
-                WHERE monoisotopic_mass BETWEEN %s AND %s
-            )
+                WHERE (monoisotopic_mass BETWEEN %s AND %s)
+            ) 
             SELECT
                 smiles,
                 monoisotopic_mass,

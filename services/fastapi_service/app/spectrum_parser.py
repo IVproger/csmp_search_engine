@@ -77,10 +77,12 @@ def _parse_mzml(file_path: Path) -> list[ParsedSpectrum]:
                     ParsedSpectrum(
                         spectrum_id=str(spec.ID or index),
                         precursor_mz=precursor_mz,
+                        charge=spec.get("charge state"),
                         adduct=_first_non_empty(spec.get("adduct"), spec.get("precursor type")),
                         formula=_first_non_empty(
                             spec.get("molecular_formula"),
                             spec.get("formula"),
+                            spec.get("molecular formula"),
                         ),
                         peaks=peaks,
                         parsing_message=parsing_message,
@@ -137,6 +139,7 @@ def _parse_matchms_spectra(spectra: Any, source_format: str) -> list[ParsedSpect
                             )
                         ),
                         precursor_mz=precursor_mz,
+                        charge=metadata.get("charge"),
                         adduct=_first_non_empty(metadata.get("adduct"), metadata.get("precursor_type")),
                         formula=_first_non_empty(
                             metadata.get("formula"),

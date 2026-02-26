@@ -112,9 +112,16 @@ async def annotate_spectrum(file: UploadFile = File(...)) -> AnnotateSpectrumRes
                     continue
 
                 try:
+                    logger.info(
+                        "Searching molecular DB for spectrum %s with precursor m/z %.4f.",
+                        spectrum.spectrum_id,
+                        spectrum.precursor_mz,
+                    )
                     candidates_by_spectrum_id[spectrum.spectrum_id] = db_search_client.search_candidates(
                         precursor_mz=spectrum.precursor_mz,
+                        adduct=spectrum.adduct,
                         embedding=spectrum_embedding,
+                        ppm_tolerance=100,
                     )
                 except DatabaseSearchError as error:
                     logger.warning(
