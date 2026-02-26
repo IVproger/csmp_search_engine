@@ -22,9 +22,16 @@ services:
       context: ./services/postgres_service
       dockerfile: Dockerfile
     container_name: postgres-molecular-search-db
+    shm_size: 1gb 
     ports:
       - "5432:5432"
     restart: unless-stopped
+    command: >
+      postgres 
+      -c maintenance_work_mem=512MB 
+      -c max_wal_size=2GB 
+      -c checkpoint_timeout=20min 
+      -c work_mem=16MB
     environment:
       POSTGRES_DB: molecular_search_db
       POSTGRES_USER: csmp_user
