@@ -75,7 +75,6 @@ async def annotate_spectrum(file: UploadFile = File(...)) -> AnnotateSpectrumRes
             ),
         ) from error
 
-    # TODO: send parsed_spectra to inference + DB search pipeline.
     # Prepare response with parsed spectra and placeholder messages for candidates
     results: list[SpectrumAnnotationResult] = []
     valid_spectra = [spectrum for spectrum in parsed_spectra if spectrum.precursor_mz is not None]
@@ -120,8 +119,8 @@ async def annotate_spectrum(file: UploadFile = File(...)) -> AnnotateSpectrumRes
                     candidates_by_spectrum_id[spectrum.spectrum_id] = db_search_client.search_candidates(
                         precursor_mz=spectrum.precursor_mz,
                         adduct=spectrum.adduct,
-                        embedding=spectrum_embedding,
-                        ppm_tolerance=100,
+                        charge=spectrum.charge,
+                        embedding=spectrum_embedding
                     )
                 except DatabaseSearchError as error:
                     logger.warning(

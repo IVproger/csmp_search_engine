@@ -2,6 +2,7 @@ from __future__ import annotations
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Any
+import numpy as np
 from fastapi import UploadFile
 from matchms.importing import load_from_json, load_from_mgf, load_from_msp
 from pymzml.run import Reader
@@ -71,13 +72,25 @@ def _parse_mzml(file_path: Path) -> list[ParsedSpectrum]:
                 if precursor_mz is None:
                     parsing_message = "Missing precursor_mz in input spectrum. Candidate search is unavailable."
 
-                peaks = [Peak(mz=float(mz), intensity=float(intensity)) for mz, intensity in peaks_raw]
+                mz_values = np.array([float(mz) for mz, _ in peaks_raw], dtype=np.float32)
+                intensity_values = np.array([float(intensity) for _, intensity in peaks_raw], dtype=np.float32)
+                normalized_intensities = normalize_spectrum_intensities(intensity_values, method="max_norm")
+                peaks = [
+                    Peak(mz=float(mz), intensity=float(intensity))
+                    for mz, intensity in zip(mz_values, normalized_intensities)
+                ]
 
                 parsed.append(
                     ParsedSpectrum(
                         spectrum_id=str(spec.ID or index),
                         precursor_mz=precursor_mz,
-                        charge=spec.get("charge state"),
+                        charge=_parse_charge(
+                            _first_non_empty(
+                                spec.get("charge state"),
+                                spec.get("charge"),
+                                _extract_mzml_precursor_charge(spec),
+                            )
+                        ),
                         adduct=_first_non_empty(spec.get("adduct"), spec.get("precursor type")),
                         formula=_first_non_empty(
                             spec.get("molecular_formula"),
@@ -98,15 +111,54 @@ def _parse_mzml(file_path: Path) -> list[ParsedSpectrum]:
 
 def _extract_mzml_precursor_mz(spec: Any) -> float | None:
     selected_precursors = getattr(spec, "selected_precursors", None) or []
+    if selected_precursors:
+        precursor_mz = selected_precursors[0].get("mz")
+        if precursor_mz is not None:
+            return _parse_precursor_mz_value(precursor_mz)
+
+    fallback_value = _first_non_empty(
+        spec.get("precursor_mz"),
+        spec.get("precursor m/z"),
+        spec.get("selected ion m/z"),
+        spec.get("isolation window target m/z"),
+    )
+    return _parse_precursor_mz_value(fallback_value)
+
+
+def _extract_mzml_precursor_charge(spec: Any) -> int | None:
+    selected_precursors = getattr(spec, "selected_precursors", None) or []
     if not selected_precursors:
         return None
 
-    precursor_mz = selected_precursors[0].get("mz")
-    if precursor_mz is None:
+    return _parse_charge(
+        _first_non_empty(
+            selected_precursors[0].get("charge"),
+            selected_precursors[0].get("charge state"),
+        )
+    )
+
+
+def _parse_precursor_mz_value(value: Any) -> float | None:
+    if value is None:
         return None
 
+    if isinstance(value, (list, tuple)):
+        if not value:
+            return None
+        value = value[0]
+
+    if isinstance(value, str):
+        normalized = value.strip().replace(",", " ")
+        if not normalized:
+            return None
+        token = normalized.split()[0]
+        try:
+            return float(token)
+        except ValueError:
+            return None
+
     try:
-        return float(precursor_mz)
+        return float(value)
     except (TypeError, ValueError):
         return None
 
@@ -122,9 +174,12 @@ def _parse_matchms_spectra(spectra: Any, source_format: str) -> list[ParsedSpect
                 if precursor_mz is None:
                     parsing_message = "Missing precursor_mz in input spectrum. Candidate search is unavailable."
 
+                mz_values = np.asarray(spectrum.peaks.mz, dtype=np.float32)
+                intensity_values = np.asarray(spectrum.peaks.intensities, dtype=np.float32)
+                normalized_intensities = normalize_spectrum_intensities(intensity_values, method="max_norm")
                 peaks = [
                     Peak(mz=float(mz), intensity=float(intensity))
-                    for mz, intensity in zip(spectrum.peaks.mz, spectrum.peaks.intensities)
+                    for mz, intensity in zip(mz_values, normalized_intensities)
                 ]
 
                 parsed.append(
@@ -139,7 +194,14 @@ def _parse_matchms_spectra(spectra: Any, source_format: str) -> list[ParsedSpect
                             )
                         ),
                         precursor_mz=precursor_mz,
-                        charge=metadata.get("charge"),
+                        charge=_parse_charge(
+                            _first_non_empty(
+                                metadata.get("charge"),
+                                metadata.get("precursor_charge"),
+                                metadata.get("charge state"),
+                                metadata.get("charge_state"),
+                            )
+                        ),
                         adduct=_first_non_empty(metadata.get("adduct"), metadata.get("precursor_type")),
                         formula=_first_non_empty(
                             metadata.get("formula"),
@@ -159,20 +221,57 @@ def _parse_matchms_spectra(spectra: Any, source_format: str) -> list[ParsedSpect
 
 
 def _extract_matchms_precursor_mz(metadata: dict[str, Any]) -> float | None:
-    for key in ("precursor_mz", "precursor mz", "pepmass"):
+    for key in (
+        "precursor_mz",
+        "precursor mz",
+        "precursor m/z",
+        "pepmass",
+        "parentmass",
+        "parent_mass",
+    ):
         value = metadata.get(key)
-        if value is None:
-            continue
+        parsed = _parse_precursor_mz_value(value)
+        if parsed is not None:
+            return parsed
 
-        if isinstance(value, (list, tuple)):
-            if not value:
-                continue
-            value = value[0]
+    return None
 
-        try:
-            return float(value)
-        except (TypeError, ValueError):
-            continue
+
+def _parse_charge(value: Any) -> int | None:
+    if value is None:
+        return None
+
+    if isinstance(value, int):
+        return value
+
+    if isinstance(value, float):
+        if value.is_integer():
+            return int(value)
+        return None
+
+    if isinstance(value, str):
+        normalized = value.strip().replace(" ", "")
+        if not normalized:
+            return None
+
+        if normalized.endswith("+") or normalized.endswith("-"):
+            sign = 1 if normalized.endswith("+") else -1
+            digits = normalized[:-1]
+            if not digits:
+                return sign
+            if digits.isdigit():
+                return sign * int(digits)
+
+        if normalized.startswith("+") or normalized.startswith("-"):
+            sign = 1 if normalized.startswith("+") else -1
+            digits = normalized[1:]
+            if not digits:
+                return sign
+            if digits.isdigit():
+                return sign * int(digits)
+
+        if normalized.isdigit():
+            return int(normalized)
 
     return None
 
@@ -183,3 +282,23 @@ def _first_non_empty(*values: Any) -> Any:
             continue
         return value
     return None
+
+
+def normalize_spectrum_intensities(
+    intensity_values: np.ndarray,
+    *,
+    method: str = "max_norm",
+) -> np.ndarray:
+    values = np.asarray(intensity_values, dtype=np.float32)
+    if values.size == 0:
+        return values
+
+    if method == "max_norm":
+        max_intensity = float(np.max(values))
+        if max_intensity > 0:
+            normalized_intensities = (values / max_intensity) * 100.0
+        else:
+            normalized_intensities = values
+        return normalized_intensities.astype(np.float32, copy=False)
+
+    raise SpectrumParserError(f"Unsupported intensity normalization method: {method}")
