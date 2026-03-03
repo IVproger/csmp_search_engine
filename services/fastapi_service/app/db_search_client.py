@@ -20,7 +20,7 @@ class DatabaseSearchConfig:
     password: str = os.getenv("POSTGRES_PASSWORD", "csmp_password")
     table_name: str = os.getenv("POSTGRES_MOLECULAR_TABLE", "molecular_search")
     ppm_tolerance: float = float(os.getenv("SEARCH_PPM_TOLERANCE", "100"))
-    top_k: int = int(os.getenv("SEARCH_TOP_K", "100"))
+    top_k: int = int(os.getenv("SEARCH_TOP_K", "10"))
     min_mass_window_da: float = float(os.getenv("SEARCH_MIN_MASS_WINDOW_DA", "0.01"))
     allow_vector_only_fallback: bool = os.getenv("SEARCH_ALLOW_VECTOR_ONLY_FALLBACK", "true").lower() == "true"
     connect_timeout_seconds: int = int(os.getenv("POSTGRES_CONNECT_TIMEOUT", "5"))
