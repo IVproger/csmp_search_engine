@@ -5,6 +5,7 @@ import os
 from dataclasses import dataclass
 from functools import lru_cache
 import psycopg
+from psycopg_pool import ConnectionPool
 from app.models import MoleculeCandidate
 from app.utils import _get_mass_candidates
 
@@ -24,10 +25,29 @@ class DatabaseSearchConfig:
     min_mass_window_da: float = float(os.getenv("SEARCH_MIN_MASS_WINDOW_DA", "0.01"))
     allow_vector_only_fallback: bool = os.getenv("SEARCH_ALLOW_VECTOR_ONLY_FALLBACK", "true").lower() == "true"
     connect_timeout_seconds: int = int(os.getenv("POSTGRES_CONNECT_TIMEOUT", "5"))
+    pool_min_size: int = int(os.getenv("POSTGRES_POOL_MIN_SIZE", "1"))
+    pool_max_size: int = int(os.getenv("POSTGRES_POOL_MAX_SIZE", "8"))
+    pool_timeout_seconds: float = float(os.getenv("POSTGRES_POOL_TIMEOUT_SECONDS", "10"))
 
 class DbSearchClient:
     def __init__(self, config: DatabaseSearchConfig):
         self._config = config
+        conninfo = (
+            f"host={config.host} "
+            f"port={config.port} "
+            f"dbname={config.dbname} "
+            f"user={config.user} "
+            f"password={config.password} "
+            f"connect_timeout={config.connect_timeout_seconds}"
+        )
+        self._pool = ConnectionPool(
+            conninfo=conninfo,
+            min_size=max(1, config.pool_min_size),
+            max_size=max(1, config.pool_max_size),
+            timeout=config.pool_timeout_seconds,
+            kwargs={"autocommit": True},
+            open=True,
+        )
 
     def search_candidates(
         self,
@@ -91,17 +111,10 @@ class DbSearchClient:
             LIMIT %s
         """
 
+        rows = []
         try:
-            with psycopg.connect(
-                host=self._config.host,
-                port=self._config.port,
-                dbname=self._config.dbname,
-                user=self._config.user,
-                password=self._config.password,
-                connect_timeout=self._config.connect_timeout_seconds,
-            ) as connection:
+            with self._pool.connection() as connection:
                 with connection.cursor() as cursor:
-                    rows = []
                     for ppm in ppm_windows:
                         for neutral_mass in neutral_mass_candidates:
                             delta = max(neutral_mass * (ppm / 1e6), self._config.min_mass_window_da)
