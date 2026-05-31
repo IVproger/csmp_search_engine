@@ -422,7 +422,3 @@ API_BASE_URL=http://localhost:8000 \
   natural extensions.
 
 ---
-
-<div align="center">
-<sub>Built as a diploma project — a hybrid mass-filter + embedding retrieval engine for MS/MS molecular annotation.</sub>
-</div>
