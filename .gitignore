@@ -206,6 +206,15 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 .DS_Store
+
+# Local agent / editor state
+.claude/
+
+# Large, locally-provided assets (not version-controlled — see README)
+# /models    : Triton model repository (ONNX weights, several GB)
+# /data      : PostgreSQL cluster + seed CSVs
+# /notebooks : research & evaluation notebooks
+# /scripts   : local maintenance scripts
 /models
 /data
 /notebooks

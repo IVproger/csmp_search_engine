@@ -1,155 +1,61 @@
-# Copilot Instructions for csmp_search_engine
+# Copilot instructions — csmp_search_engine
 
-## Project Overview
+Concise guidance for AI coding assistants. For the full brief see
+[`AGENTS.md`](../AGENTS.md); for human docs see [`README.md`](../README.md).
 
-- This project implements a hybrid AI-powered search engine for spectrum → molecule annotation.
-- The system is fully containerized and built as a set of modular microservices.
+## Project in one line
 
----
+A containerized **spectrum → molecule annotation engine**: parse an MS/MS
+spectrum, encode it into a 256-dim vector with a neural encoder, and retrieve
+candidate molecules via **mass-window filtering + `pgvector` cosine similarity**.
 
-## Core Services
+## Architecture (4 services, Docker Compose)
 
-### Streamlit Web App (UI)
+- **`streamlit_service`** (`:8501`) — Web UI: upload, Plotly spectrum preview,
+  RDKit structure rendering of candidates.
+- **`fastapi_service`** (`:8000`) — Orchestrator and the only business-logic
+  layer. Endpoints: `GET /health`, `POST /annotate-spectrum`.
+- **`triton_service`** (gRPC `:8001`) — NVIDIA Triton serving the ONNX spectrum
+  encoder.
+- **`postgres_service`** (`:5432`) — PostgreSQL + `pgvector` molecular database.
 
-- Accepts spectrum files in mzML / MGF formats
-- Sends annotation requests to backend API 
-- Displays ranked molecule candidates
+## Supported inputs
 
-Runs in Docker on port `8501`.
+Spectrum files: `.mzML`, `.MGF`, `.MSP`, `.JSON` (mzML via `pymzml`; the rest via
+`matchms`). A file may contain many spectra.
 
----
+## Request pipeline (`fastapi_service/app/main.py`)
 
-### FastAPI Backend (Orchestrator)
+1. Validate extension and parse all spectra (`spectrum_parser.py`); normalize
+   peak intensities (max-norm to 100).
+2. Batch-encode spectra that have a precursor m/z via Triton
+   (`spectrum_encoder_client.py`); L2-normalize embeddings.
+3. Per spectrum: reconstruct neutral mass from precursor m/z + adduct + proton
+   (`utils.py`), mass-window filter, then cosine NN search (`db_search_client.py`),
+   return top-K candidates.
+4. Spectra without a precursor m/z are returned with a message and no candidates.
 
-- Central control layer for all requests
-- Handles spectrum parsing, inference calls, and DB search
-- Exposes main endpoint:
+## Response schema (`models.py`)
 
-POST /annotate-spectrum which accepts spectrum data in mzML / MGF formats and returns ranked molecule candidates with metadata for each spectrum instance in file.
+`AnnotateSpectrumResponse { status, file_name, file_type, message, results[] }`,
+where each result is
+`{ spectrum_id, precursor_mz, candidates[] | null, message }` and each candidate
+is `{ smiles, mass, similarity_score }` with `similarity_score` in `0–100`
+(`(1 − cosine_distance) × 100`).
 
-Runs in Docker on port `8000`.
+## Conventions to follow
 
----
+- Put real logic in `fastapi_service`; keep services stateless.
+- Always **mass-filter before vector search**; keep the escalating-ppm strategy.
+- Degrade gracefully per spectrum — never let one failure 500 the request.
+- Read config from env vars with defaults (see README tables); don't hard-code
+  hosts/ports/tolerances. Treat the encoder model as swappable.
+- Python 3.11+, full type hints, `snake_case`, `lru_cache` singletons for clients.
 
-### Spectrum Parser
+## Don't
 
-- Converts MS/MS spectra files mzML / MGF into structured numeric tensors
-- Extracts:
-  - peak m/z values List[float]
-  - intensities List[float]
-  - precursor m/z float
-  - adduct string (if available)
-  - formula string (if available)
-
-implemented inside FastAPI service for tight integration with inference and search pipelines.
-
----
-
-### Embedding Service (ML Inference)
-
-- Runs Triton Inference Server
-- Serves ONNX spectrum encoder model
-- Receives batches of parsed spectrum data via gRPC
-- Outputs dense vector embeddings, which send back to FastAPI service inside db search client for downstream search
-
-Isolated in its own container and cab accessed inside the docker network on port `8001` via gRPC.
-
----
-
-### Molecular Search Database
-
-- PostgreSQL with pgvector extension
-- Stores:
-  - molecule metadata
-  - molecular embeddings
-- Supports:
-  - mass window filtering
-  - nearest-neighbor vector search
-
-Runs on port `5432` with persistent volume.
-
----
-
-## Data Flow
-
-1. User uploads spectrum file in formar mzML / MGF in Streamlit UI. File contains one or more spectrum instances, each with precursor_m/z, adduct, formula, and peak lists (mz and intencity values).
-2. Streamlit calls FastAPI POST `/annotate-spectrum` and send a exact file.
-3. File parsed into numeric form. For each spectrum instance, extract data according to schema:
-  - precursor_m/z float
-  - adduct string (if available)
-  - formula string (if available)
-  - peaks List[Tuple[float, float]] (m/z, intensity pairs)
-4. Parsed data sent as batch to Triton for embeddings generation. Also the batch of precursor m/z values sent to db client for mass filtering.
-5. Embedding returned into to FastAPI service into db client, which performs search in PostgreSQL database.  
-6. Precursor m/z filters candidate molecules and pgvector ranks by similarity  
-8. Ranked results returned to UI in approximate json format 
-
-```
-{ spectrum №1
-  "candidates": [
-    {"smiles": "O=C1CCCN1CC#CCN1CCCC1", "mass": 162.1157, "score": 0.91},
-    {"smiles": "CC(C[N+](C)(C)C)OC(=O)N", "mass": 166.0629, "score": 0.74}
-  ]
-spectrum №2
-  "candidates": [
-    {"smiles": "O=C1CCCN1CC#CCN1CCCC1", "mass": 162.1157, "score": 0.91},
-    {"smiles": "CC(C[N+](C)(C)C)OC(=O)N", "mass": 166.0629, "score": 0.74}
-  ]
-}
-```
-
----
-
-## Tech Stack
-
-- Python 3.11+
-- FastAPI
-- Streamlit
-- Triton Inference Server
-- ONNX Runtime, PyTorch for model development
-- PostgreSQL + pgvector
-- Docker & Docker Compose
-- gRPC for model inference
-- pymzml, matchms for spectrum parsing
-
----
-
-## Conventions & Patterns
-
-- Keep services stateless where possible
-- Use FastAPI as the only orchestration layer
-- Always apply mass filtering before vector search
-- Treat embedding models as swappable components
-- Keep data schemas explicit and versioned
-
----
-
-## Development Workflow
-
-- Run services via Docker Compose
-- Update ML models by replacing ONNX artifacts
-- Extend DB schema via migrations
-- Add new pipelines as FastAPI modules
-
----
-
-## Extending the System
-
-- Add new encoders as separate Triton models
-- Implement ensemble ranking modules
-- Add spectrum clustering or caching layers
-- Introduce feedback-driven re-ranking
-
----
-
-## Integration Points
-
-- gRPC → Triton inference
-- REST → FastAPI API
-- SQL + vector search → Postgres
-
-
-## System Limitations & Future Improvements
-1. We can work only with spectrum data with has the precursor_m/z field, otherwise we cannot perform candidate search. In the future, we can consider implementing a fallback solution for spectra without precursor_m/z, such as using a separate model that can generate candidates based on peak patterns alone, or by leveraging any available metadata to make educated guesses about potential precursor m/z values.
-2. For Molecular Encoder model, we need to reran the ONNX compilation script each time when we change the batch size. Currently we need to pad the batch to the fixed size, which is not optimal for inference efficiency. In the future, we need to rewrate the ESA module inside the Molecular Encoder to support dynamic batch sizes.
----
+- Don't assume `models/`, `data/`, `notebooks/`, `scripts/` exist or commit them
+  — they are git-ignored, locally-provided assets (multi-GB weights, DB cluster,
+  seed CSV).
+- Don't change the `VECTOR(256)` embedding contract or the
+  `mzs`/`intens`/`num_peaks` Triton inputs without updating both sides.
